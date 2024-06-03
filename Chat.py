@@ -72,7 +72,8 @@ class StelleAI:
         try:
             conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "DB", "Training.db"))
             c = conn.cursor()
-            c.execute("SELECT response FROM training_data WHERE prompt=?", (message,))
+            normalized_message = message.lower()
+            c.execute("SELECT response FROM training_data WHERE LOWER(prompt)=?", (normalized_message,))
             response = c.fetchone()
             if response:
                 self.message_queue.put(f"Stelle: {response[0]}")
